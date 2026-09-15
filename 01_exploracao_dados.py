@@ -32,3 +32,6 @@ partidas["Saldo_mandante"] = (
     partidas["mandante_Placar"] - partidas["visitante_Placar"]
 )
 
+clubes_mandante = partidas[["mandante", "mandante_Estado"]].copy()
+
+clubes_mandante.columns = ["clube", "estado"]
