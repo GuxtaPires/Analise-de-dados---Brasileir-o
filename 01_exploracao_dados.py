@@ -43,3 +43,33 @@ clubes_visitante.columns = ["clube", "estado"]
 dim_clube = pd.concat([clubes_mandante, clubes_visitante], axis=0)
 
 dim_clube = dim_clube.drop_duplicates("clube").reset_index(drop=True)
+
+dim_clube["id_clube"] = dim_clube.index + 1
+
+dim_clube["clube"].value_counts()
+sorted(dim_clube["clube"].unique())
+
+stats = estatisticas.merge(
+    partidas[["ID", "ano", "data", "mandante", "visitante", "vencedor", "resultado"]],
+    left_on="partida_id",
+    right_on="ID",
+    how="left"
+)
+
+stats["local"] = np.where(
+    stats["clube"] == stats["mandante"],
+    "Mandante",
+    "Visitante"
+)
+
+stats["resultado_clube"] = np.select(
+    [
+        stats["vencedor"] == "-",
+        stats["clube"] == stats["vencedor"]
+    ],
+    [
+        "Empate",
+        "Vitória"
+    ],
+    default="Derrota"
+)
