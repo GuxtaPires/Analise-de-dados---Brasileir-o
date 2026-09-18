@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 partidas = pd.read_csv("campeonato-brasileiro-full.csv")
 estatisticas = pd.read_csv("campeonato-brasileiro-estatisticas-full.csv")
@@ -73,3 +74,25 @@ stats["resultado_clube"] = np.select(
     ],
     default="Derrota"
 )
+
+fato_gols = gols.merge(
+    partidas[["ID", "ano", "data", "mandante", "visitante", "resultado"]],
+    left_on="partida_id",
+    right_on="ID",
+    how="left"
+)
+
+fato_cartoes = cartoes.merge(
+    partidas[["ID", "ano", "data", "mandante", "visitante", "resultado"]],
+    left_on="partida_id",
+    right_on="ID",
+    how="left"
+)
+
+os.makedirs("data/processed", exist_ok=True)
+
+partidas.to_csv("data/processed/partidas.csv", index=False)
+dim_clube.to_csv("data/processed/dim_clube.csv", index=False)
+stats.to_csv("data/processed/stats.csv", index=False)
+fato_gols.to_csv("data/processed/fato_gols.csv", index=False)
+fato_cartoes.to_csv("data/processed/fato_cartoes.csv", index=False)
