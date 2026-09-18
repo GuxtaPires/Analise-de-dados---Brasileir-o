@@ -35,3 +35,11 @@ partidas["Saldo_mandante"] = (
 clubes_mandante = partidas[["mandante", "mandante_Estado"]].copy()
 
 clubes_mandante.columns = ["clube", "estado"]
+
+clubes_visitante = partidas[["visitante", "visitante_Estado"]].copy()
+
+clubes_visitante.columns = ["clube", "estado"]
+
+dim_clube = pd.concat([clubes_mandante, clubes_visitante], axis=0)
+
+dim_clube = dim_clube.drop_duplicates("clube").reset_index(drop=True)
